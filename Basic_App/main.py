@@ -53,3 +53,5 @@ def read_user_details(user_id: int, include_email: bool = False):
         return {"user_id": user_id, "email": "include_email"}
     else:
         return {"user_id": user_id, "email": "Email not included"}
+
+## **Day three of FastAPI Practice**
