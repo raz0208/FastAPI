@@ -31,14 +31,25 @@ from fastapi import FastAPI
 
 app = FastAPI()
 
-# Define a route for user path parameter
-@app.get("/users/{user_id}")
-def read_user(user_id: int):
-    return {"user_id": user_id}
+# # Define a route for user path parameter
+# @app.get("/users/{user_id}")
+# def read_user(user_id: int):
+#     return {"user_id": user_id}
 
-# Define a route for string path parameter
-@app.get("/items/{item_name}")
-def read_item(item_name: str):
-    return {"item_name": item_name}
+# # Define a route for string path parameter
+# @app.get("/items/{item_name}")
+# def read_item(item_name: str):
+#     return {"item_name": item_name}
 
-# Define a route for query parameters
+# # Define a route for query parameters
+# @app.get("/users/")
+# def road_user(user_id: int, name: str):
+#     return {"user_id": user_id, "name": name}
+
+@app.get("/users/{user_id}/details")
+def read_user_details(user_id: int, include_email: bool = False):
+    # user_details = {"user_id": user_id, "name": "John Doe"}
+    if include_email:
+        return {"user_id": user_id, "email": "include_email"}
+    else:
+        return {"user_id": user_id, "email": "Email not included"}
