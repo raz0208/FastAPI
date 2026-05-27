@@ -26,6 +26,8 @@
 # def delete_item(item_id: int):
 #     return {"item_id": item_id, "Message": "Item deleted successfully!"}
 
+
+############################################################################
 # ## **Day two of FastAPI Practice**
 # from fastapi import FastAPI
 
@@ -54,25 +56,46 @@
 #     else:
 #         return {"user_id": user_id, "email": "Email not included"}
 
+
+############################################################################
 ## **Day three of FastAPI Practice**
 #### Handle request and response body using Pydantic models
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
 
 app = FastAPI()
 
-# Define a Pydantic model format for item
+# # Define a Pydantic model format for item
+# class User(BaseModel):
+#     name: str
+#     age: int
+
+# # # Define a route to create a user
+# # @app.post("/users/")
+# # async def create_user(user: User):
+# #     return {"sended user": user.name, "sended age": user.age}
+
+# # Define a route to create a user for response body
+# @app.post("/users/{user_id}", response_model=User)
+# async def create_user(user_id: int):
+#     # Example user data, in a real application you would typically save this to a database
+#     return User(name="John Doe", age=30)
+
+# Define a Pytdantic model with auto validation
 class User(BaseModel):
     name: str
-    age: int
+    age: int = Field(..., gt = 0, le = 120, description = "Age must be between 1 and 120")
 
-# # Define a route to create a user
-# @app.post("/users/")
-# async def create_user(user: User):
-#     return {"sended user": user.name, "sended age": user.age}
+    @field_validator("name")
+    def name_must_not_be_empty(cls, value):
+        if not value:
+            raise ValueError("Name must not be empty")
+        return value
 
-# Define a route to create a user for response body
-@app.post("/users/{user_id}", response_model=User)
-async def create_user(user_id: int):
+@app.post("/users/")
+async def create_user(user: User):
     # Example user data, in a real application you would typically save this to a database
-    return User(name="John Doe", age=30)
+    user_data = {"name": user.name, "age": user.age}
+    return user_data
+
+############################################################################
