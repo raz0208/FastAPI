@@ -103,18 +103,46 @@
 ## **Day four of FastAPI Practice: Pydantic Models**
 ### Example Usage: Validation user data for registration form
 
+# from fastapi import FastAPI
+# from pydantic import BaseModel
+
+# app = FastAPI()
+
+# class User(BaseModel):
+#     username: str
+#     email: str
+#     age: int
+
+# @app.post("/register/")
+
+# async def register_user(user: User):
+#     # In a real application, you would typically save this to a database
+#     return user
+
+# Use advanced validation with Pydantic and regular expressions
 from fastapi import FastAPI
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, Field, field_validator
+"""
+EmailStr: Validates that the input is a valid email address.
+conint: Validates that the input is an integer and can enforce constraints.
+constr: Validates that the input is a string and can enforce constraints.
+"""
 
 app = FastAPI()
 
 class User(BaseModel):
-    username: str
-    email: str
-    age: int
+    username: str = Field(..., min_length=3, max_length=50, pattern=r'^[a-zA-Z0-9_]+$')
+    email: EmailStr
+    age: int = Field(..., gt=0, le=120)
 
+    # You can also add custom validation logic using validators
+    @field_validator("username")
+    def username_must_not_contain_spaces(cls, value):
+        if " " in value:
+            raise ValueError("Username must not contain spaces.")
+        return value
+        
 @app.post("/register/")
-
 async def register_user(user: User):
     # In a real application, you would typically save this to a database
     return user
