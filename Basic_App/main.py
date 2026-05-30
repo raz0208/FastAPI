@@ -169,10 +169,12 @@ async def create_upload_file(file: UploadFile = File(...)):
 
 # Save uploaded file
 @app.post("/savefile/")
-async def save_uploaf_file(file: UploadFile = File(...)):
+async def save_upload_file(file: UploadFile = File(...)):
     with open(f'uploads/{file.filename}', "wb") as f:
         f.write(file.file.read())
     return {"message": f"file '{file.filename}' saved successfully!"}
 
 # Multiple file uploads
-
+@app.post("/uploadfiles/")
+async def upload_files(files: List[UploadFile] = File(...)):
+    return {"filenames": [file.filename for file in files]}
