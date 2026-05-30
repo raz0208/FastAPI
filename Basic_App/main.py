@@ -119,30 +119,60 @@
 #     # In a real application, you would typically save this to a database
 #     return user
 
-# Use advanced validation with Pydantic and regular expressions
-from fastapi import FastAPI
-from pydantic import BaseModel, EmailStr, Field, field_validator
-"""
-EmailStr: Validates that the input is a valid email address.
-conint: Validates that the input is an integer and can enforce constraints.
-constr: Validates that the input is a string and can enforce constraints.
-"""
+# # Use advanced validation with Pydantic and regular expressions
+# from fastapi import FastAPI
+# from pydantic import BaseModel, EmailStr, Field, field_validator
+# """
+# EmailStr: Validates that the input is a valid email address.
+# conint: Validates that the input is an integer and can enforce constraints.
+# constr: Validates that the input is a string and can enforce constraints.
+# """
+
+# app = FastAPI()
+
+# class User(BaseModel):
+#     username: str = Field(..., min_length=3, max_length=50, pattern=r'^[a-zA-Z0-9_]+$')
+#     email: EmailStr
+#     age: int = Field(..., gt=0, le=120)
+
+#     # You can also add custom validation logic using validators
+#     @field_validator("username")
+#     def username_must_not_contain_spaces(cls, value):
+#         if " " in value:
+#             raise ValueError("Username must not contain spaces.")
+#         return value
+        
+# @app.post("/register/")
+# async def register_user(user: User):
+#     # In a real application, you would typically save this to a database
+#     return user
+
+
+############################################################################
+
+## **Day 5 of FastAPI Practice: Form data and file uploades**
+from fastapi import FastAPI, Form, UploadFile, File
+from typing import List
 
 app = FastAPI()
 
-class User(BaseModel):
-    username: str = Field(..., min_length=3, max_length=50, pattern=r'^[a-zA-Z0-9_]+$')
-    email: EmailStr
-    age: int = Field(..., gt=0, le=120)
+@app.post("/login/")
+async def login(username: str = Form(...), password: str = Form(...)):
+    # In a real application, you would typically validate the username and password
+    return {"username": username, "message": "Login successful!"}
 
-    # You can also add custom validation logic using validators
-    @field_validator("username")
-    def username_must_not_contain_spaces(cls, value):
-        if " " in value:
-            raise ValueError("Username must not contain spaces.")
-        return value
-        
-@app.post("/register/")
-async def register_user(user: User):
-    # In a real application, you would typically save this to a database
-    return user
+# Upload file
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile = File(...)):
+    # In a real application, you would typically save the file to a server or cloud storage
+    return {"filename": file.filename}
+
+# Save uploaded file
+@app.post("/savefile/")
+async def save_uploaf_file(file: UploadFile = File(...)):
+    with open(f'uploads/{file.filename}', "wb") as f:
+        f.write(file.file.read())
+    return {"message": f"file '{file.filename}' saved successfully!"}
+
+# Multiple file uploads
+
