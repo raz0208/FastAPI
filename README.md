@@ -1,2 +1,2 @@
 # FastAPI
-Practice and basic app uing FastAPI
+FastAPI Practices and build basic app using FastAPI
