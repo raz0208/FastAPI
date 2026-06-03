@@ -28,4 +28,4 @@ class User(Base):
     id = Column(Integer, primary_key = True, index = true, limit = 10) # Primary key column for the user ID
     name = Column(String, index = True) # Column for the user's name
     email = Column(String, Unique = True, index = True) # Column for the user's email, which must be unique
-    age = Column(Integer, limit = from 0 to 120, nullable = True) # Column for the user's age, with a limit of 0 to 120
+    age = Column(Integer, limit = from 0 to 120, nullable = True) # Column for the user's age, with a limit of 0 to 120 
